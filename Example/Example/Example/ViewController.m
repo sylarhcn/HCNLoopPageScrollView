@@ -37,7 +37,7 @@
     [_pageView setDidSelectPageBlock:^(NSInteger pageIndex, UIView *pageView) {
         NSLog(@"SelectPage %ld",(long)pageIndex);
     }];
-    [_pageView setPageCount:6];
+    [_pageView setPageCount:3];
 //    [_pageView setAutoSrcoll:YES];
     
     [self.view addSubview:_pageView];

@@ -89,13 +89,12 @@
         [self loadPageWithPageIndex:0];
     } else {
         CGSize size = _scrollView.contentSize;
-        size.width = self.width * (count + 2);//增加两个用于头尾连接过渡
+        size.width = self.width * (count + 2);//增加两个page的宽度用于头尾连接过渡
         _scrollView.contentSize = size;
         
         [self loadPageWithPageIndex:0];
-        [self loadPageWithPageIndex:1];
         [self loadPageWithPageIndex:2];
-        
+        [self loadPageWithPageIndex:1];
         _scrollView.contentOffset = CGPointMake(self.width, 0);
     }
 }
@@ -108,12 +107,18 @@
     _selectPageBlock = [block copy];
 }
 
+#pragma mark - actions
+- (void)didTappedInContainer {
+    if (_selectPageBlock) {
+        _selectPageBlock(_pageControl.currentPage,_viewArray[_pageControl.currentPage]);
+    }
+}
+
 #pragma mark - functions
 - (void)autoScrollingRun {
     CGFloat pageWidth = self.width;
     int page = floor((_scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    [_scrollView setContentOffset:CGPointMake(pageWidth * (page + 1),
-                                              0)
+    [_scrollView setContentOffset:CGPointMake(pageWidth * (page + 1),0)
                          animated:YES];
 }
 
@@ -146,6 +151,7 @@
     
     UIImageView *imageView = [_viewArray objectAtIndex:viewIndex];
     if ((NSNull *)imageView == [NSNull null]) {
+        //只创建count个page，头尾衔接的page由头尾page互相移动位置实现
         imageView = [[UIImageView alloc] init];
         [_viewArray replaceObjectAtIndex:viewIndex withObject:imageView];
     }
@@ -157,42 +163,59 @@
         imageView.frame = frame;
         [_scrollView addSubview:imageView];
         if (_loadPageBlock) {
-            _loadPageBlock(viewIndex,imageView);
+            _loadPageBlock(viewIndex,imageView);//inital
         }
     } else if ( page <= 1 || page >= numberOfPages ) {
-        // move the controller's view to the correct page if it's a repeated one
+        // 移动page到过渡页面的位置
         CGRect frame = _scrollView.frame;
         frame.origin.x = frame.size.width * page;
         frame.origin.y = 0;
         imageView.frame = frame;
     }
+    if (_pageControl.currentPage == viewIndex) {
+        _loadPageBlock(viewIndex,imageView);//reload
+    }
 }
 
+
 - (void)loopPage {
+//    NSLog(@"loopPage");
     CGFloat pageWidth = self.width;
     int page = floor((_scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    /*翻页到了队列两头衔接的页面，头尾相接，设置offset到正确的页面的位置，
+     set contentOffset 之后才会触发一发一次didScroll,*/
     if(page == 0){
+        /**/
         _scrollView.contentOffset = CGPointMake(pageWidth * (_pageControl.numberOfPages), 0);
     } else if(page == _pageControl.numberOfPages + 1){
         _scrollView.contentOffset = CGPointMake(pageWidth, 0);
     }
 }
 
-- (void)didTappedInContainer {
-    if (_selectPageBlock) {
-        _selectPageBlock(_pageControl.currentPage,_viewArray[_pageControl.currentPage]);
+- (void)needLoadPage:(UIScrollView *)scrollView {
+    CGFloat pageWidth = self.width;
+    int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    NSInteger currentPage = page - 1;
+//    NSLog(@"%ld,%d",(long)_pageControl.currentPage,page-1);
+    /*正常滑动时，翻页到了队列两头衔接的页面，翻页没有完成，
+     此时的currentPage不发生改变，等到翻页完成，offset衔接上了，
+     再改变currentpage，reloadPage*/
+    if (currentPage == _pageControl.numberOfPages) {
+        currentPage = _pageControl.numberOfPages - 1 ;
+    } else if (currentPage == -1) {
+        currentPage = 0;
+    }
+    if (_pageControl.currentPage != currentPage) {
+        _pageControl.currentPage = currentPage;
+//        NSLog(@"load page");
+        [self loadPageWithPageIndex:page-1];
+        [self loadPageWithPageIndex:page];//
+        [self loadPageWithPageIndex:page+1];
     }
 }
 #pragma mark - ScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat pageWidth = self.width;
-    int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    _pageControl.currentPage = page - 1;
-    
-    [self loadPageWithPageIndex:page - 1];
-    [self loadPageWithPageIndex:page];
-    [self loadPageWithPageIndex:page + 1];
-
+    [self needLoadPage:scrollView];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
