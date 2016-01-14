@@ -7,11 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "HCNLoopPageScrollView.h"
+#import "HCNLoopPageView.h"
 
-@interface ViewController ()
-{
-    HCNLoopPageScrollView *_pageView;
+@interface ViewController () <HCNLoopPageScrollViewDelegate> {
+    HCNLoopPageView *_pageView;
 }
 @end
 
@@ -19,33 +18,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _pageView = [[HCNLoopPageScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
-    [_pageView setLoadPageBlock:^(NSInteger pageIndex, UIView *contentView) {
-        contentView.backgroundColor = [UIColor redColor];
-        UILabel *label = (UILabel *)[contentView viewWithTag:99];
-        if (!label) {
-            label = [[UILabel alloc] initWithFrame:contentView.bounds];
-            label.font = [UIFont systemFontOfSize:32];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.tag = 99;
-            [contentView addSubview:label];
-        }
-        NSString *pageName = [NSString stringWithFormat:@"page %ld.",(long)pageIndex+1];
-        label.text = pageName;
-    }];
-    [_pageView setDidSelectPageBlock:^(NSInteger pageIndex, UIView *pageView) {
-        NSLog(@"SelectPage %ld",(long)pageIndex);
-    }];
-    [_pageView setPageCount:3];
-//    [_pageView setAutoSrcoll:YES];
-    
+    _pageView = [[HCNLoopPageView alloc] initWithFrame:self.view.bounds];
+    _pageView.backgroundColor = [UIColor grayColor];
+    _pageView.delegate = self;
+//    _pageView.autoPlay = YES;
     [self.view addSubview:_pageView];
+    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - HCNLoopPageScrollViewDelegate
+- (NSInteger)numberOfLoopPage:(HCNLoopPageView *)pView {
+    return 5;
 }
 
+- (void)loopPage:(HCNLoopPageView *)pView didDisplayPage:(UIView *)cell AtIndex:(NSInteger)index {
+//    NSLog(@"didDisplayPageAtIndex : %ld",(long)index);
+}
+
+- (CGFloat)spaceOfLoopPage:(HCNLoopPageView *)pView {
+    return 0;
+}
+
+- (UIView *)loopPage:(HCNLoopPageView *)pView pageViewForIndex:(NSInteger)index {
+    UILabel *label = [[UILabel alloc] initWithFrame:pView.bounds];
+    label.backgroundColor = [UIColor redColor];
+    label.font = [UIFont systemFontOfSize:32];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = [NSString stringWithFormat:@"page %ld.",(long)index+1];
+    return label;
+}
+
+- (void)loopPage:(HCNLoopPageView *)pView didSelectPageAtIndex:(NSInteger)index {
+    NSLog(@"didSelectPageAtIndex : %ld",(long)index);
+}
 @end
