@@ -8,9 +8,9 @@
 
 #import "ViewController.h"
 #import "HCNLoopPageView.h"
-
-@interface ViewController () <HCNLoopPageScrollViewDelegate> {
-    HCNLoopPageView *_pageView;
+#import "HCNLoopPageView_Collection.h"
+@interface ViewController () <HCNLoopPageScrollViewDelegate,HCNLoopPageView_CollectionDelegate> {
+    HCNLoopPageView_Collection *_pageView;
 }
 @end
 
@@ -18,10 +18,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _pageView = [[HCNLoopPageView alloc] initWithFrame:self.view.bounds];
+    _pageView = [[HCNLoopPageView_Collection alloc] initWithFrame:self.view.bounds];
     _pageView.backgroundColor = [UIColor grayColor];
     _pageView.delegate = self;
-//    _pageView.autoPlay = YES;
+    _pageView.autoPlay = YES;
     [self.view addSubview:_pageView];
     
 }
@@ -32,7 +32,7 @@
 }
 
 - (void)loopPage:(HCNLoopPageView *)pView didDisplayPage:(UIView *)cell AtIndex:(NSInteger)index {
-//    NSLog(@"didDisplayPageAtIndex : %ld",(long)index);
+    NSLog(@"didDisplayPageAtIndex : %ld",(long)index);
 }
 
 - (CGFloat)spaceOfLoopPage:(HCNLoopPageView *)pView {

@@ -15,6 +15,7 @@
 		014149291B0B67BB001B247E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 014149271B0B67BB001B247E /* LaunchScreen.xib */; };
 		014149351B0B67BB001B247E /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 014149341B0B67BB001B247E /* ExampleTests.m */; };
 		019B645F1C47D73600D07A1D /* HCNLoopPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 019B645E1C47D73600D07A1D /* HCNLoopPageView.m */; };
+		01C78F531C48953600F43600 /* HCNLoopPageView_Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C78F521C48953600F43600 /* HCNLoopPageView_Collection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,8 @@
 		014149341B0B67BB001B247E /* ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleTests.m; sourceTree = "<group>"; };
 		019B645D1C47D73600D07A1D /* HCNLoopPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HCNLoopPageView.h; sourceTree = "<group>"; };
 		019B645E1C47D73600D07A1D /* HCNLoopPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HCNLoopPageView.m; sourceTree = "<group>"; };
+		01C78F511C48953600F43600 /* HCNLoopPageView_Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HCNLoopPageView_Collection.h; sourceTree = "<group>"; };
+		01C78F521C48953600F43600 /* HCNLoopPageView_Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HCNLoopPageView_Collection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,8 @@
 			children = (
 				019B645D1C47D73600D07A1D /* HCNLoopPageView.h */,
 				019B645E1C47D73600D07A1D /* HCNLoopPageView.m */,
+				01C78F511C48953600F43600 /* HCNLoopPageView_Collection.h */,
+				01C78F521C48953600F43600 /* HCNLoopPageView_Collection.m */,
 			);
 			name = HCNLoopPageScrollView;
 			path = ../HCNLoopPageScrollView;
@@ -237,6 +242,7 @@
 				014149211B0B67BB001B247E /* ViewController.m in Sources */,
 				0141491E1B0B67BB001B247E /* AppDelegate.m in Sources */,
 				0141491B1B0B67BB001B247E /* main.m in Sources */,
+				01C78F531C48953600F43600 /* HCNLoopPageView_Collection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
